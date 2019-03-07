@@ -1,8 +1,7 @@
 use crate::binding::{
     blake2b_constant_BLAKE2B_KEYBYTES, blake2b_constant_BLAKE2B_OUTBYTES,
     blake2b_constant_BLAKE2B_PERSONALBYTES, blake2b_constant_BLAKE2B_SALTBYTES, blake2b_final,
-     blake2b_init_key_with_param, blake2b_init_param, blake2b_param, blake2b_state,
-    blake2b_update,
+    blake2b_init_key_with_param, blake2b_init_param, blake2b_param, blake2b_state, blake2b_update,
 };
 use std::ffi::c_void;
 
@@ -42,7 +41,7 @@ impl Blake2bBuilder {
             param,
             state,
             key_len,
-            key
+            key,
         }
     }
 
@@ -140,7 +139,7 @@ pub fn blake2b(key: &[u8], data: &[u8], dst: &mut [u8]) {
 
 #[cfg(test)]
 mod tests {
-    use super::{Blake2bBuilder};
+    use super::Blake2bBuilder;
     use faster_hex::{hex_decode, hex_string};
     use serde_derive::Deserialize;
     use std::fs::File;

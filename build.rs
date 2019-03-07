@@ -4,8 +4,8 @@ fn main() {
             .file("BLAKE2/sse/blake2b.c")
             .compile("libblake2b.a");
     } else {
-    cc::Build::new()
-        .file("BLAKE2/ref/blake2b-ref.c")
-        .compile("libblake2b.a");
+        cc::Build::new()
+            .file("BLAKE2/ref/blake2b-ref.c")
+            .compile("libblake2b.a");
     }
 }

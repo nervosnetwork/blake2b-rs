@@ -1,9 +1,14 @@
 [package]
-name = "blake2b"
+name = "blake2b-rs"
 version = "0.1.0"
 authors = ["zhangsoledad <787953403@qq.com>"]
 edition = "2018"
 build = "build.rs"
+license = "MIT"
+description = "Rust bindings for the official Blake2b C implementation"
+categories = ["Cryptography"]
+keywords = ["hash", "blake2", "crypto"]
+autotests = true
 
 [build-dependencies]
 cc = "1.0"
