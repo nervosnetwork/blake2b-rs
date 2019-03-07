@@ -6,7 +6,7 @@ edition = "2018"
 build = "build.rs"
 license = "MIT"
 description = "Rust bindings for the official Blake2b C implementation"
-categories = ["Cryptography"]
+categories = ["cryptography"]
 keywords = ["hash", "blake2", "crypto"]
 autotests = true
 
