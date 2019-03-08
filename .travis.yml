@@ -1,0 +1,24 @@
+language: rust
+sudo: true
+cache:
+  cargo: true
+  timeout: 1024
+
+git:
+  depth: 2
+  submodules: false
+
+env:
+  global:
+    - RUST_BACKTRACE=full
+
+matrix:
+  include:
+    - rust: 1.33.0
+      os: osx
+    - rust: 1.33.0
+      os: linux
+
+
+script:
+  - cargo test --all -v --release

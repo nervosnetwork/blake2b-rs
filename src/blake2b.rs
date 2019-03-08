@@ -158,12 +158,8 @@ mod tests {
 
     #[test]
     fn test_full() {
-        let test_path = Path::new(file!())
-            .parent()
-            .unwrap()
-            .parent()
-            .unwrap()
-            .join("fixtures/test.json");
+        let test_path = Path::new(env!("CARGO_MANIFEST_DIR")).join("fixtures/test.json");
+
         let f = File::open(test_path).unwrap();
         let reader = BufReader::new(f);
         let tests: Vec<TestItem> = serde_json::from_reader(reader).unwrap();
