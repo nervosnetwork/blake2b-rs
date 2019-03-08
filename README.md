@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/nervosnetwork/blake2b-rs.svg?branch=master)](https://travis-ci.com/nervosnetwork/blake2b-rs)
+[![Build Status](https://travis-ci.com/nervosnetwork/blake2b-rs.svg)](https://travis-ci.com/nervosnetwork/blake2b-rs)
 [![Crate](https://img.shields.io/crates/v/blake2b-rs.svg)](https://crates.io/crates/blake2b-rs)
 [![License]](#license)
 
