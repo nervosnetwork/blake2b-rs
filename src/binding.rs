@@ -242,7 +242,6 @@ pub const blake2b_constant_BLAKE2B_KEYBYTES: blake2b_constant = 64;
 pub const blake2b_constant_BLAKE2B_SALTBYTES: blake2b_constant = 16;
 pub const blake2b_constant_BLAKE2B_PERSONALBYTES: blake2b_constant = 16;
 pub type blake2b_constant = u32;
-
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub struct blake2b_state__ {
@@ -254,21 +253,6 @@ pub struct blake2b_state__ {
     pub outlen: usize,
     pub last_node: u8,
 }
-
-impl ::std::fmt::Debug for blake2b_state__ {
-    fn fmt(&self, fmt: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        fmt.debug_struct("blake2b_state__")
-            .field("h", &self.h)
-            .field("t", &self.t)
-            .field("f", &self.t)
-            .field("buf", &self.buf.to_vec())
-            .field("buflen", &self.buflen)
-            .field("outlen", &self.outlen)
-            .field("last_node", &self.last_node)
-            .finish()
-    }
-}
-
 #[test]
 fn bindgen_test_layout_blake2b_state__() {
     assert_eq!(
@@ -353,7 +337,6 @@ fn bindgen_test_layout_blake2b_state__() {
     );
 }
 pub type blake2b_state = blake2b_state__;
-
 #[repr(C, packed)]
 #[derive(Debug, Copy, Clone)]
 pub struct blake2b_param__ {
@@ -504,7 +487,6 @@ fn bindgen_test_layout_blake2b_param__() {
     );
 }
 pub type blake2b_param = blake2b_param__;
-
 extern "C" {
     pub fn blake2b_init(S: *mut blake2b_state, outlen: usize) -> ::std::os::raw::c_int;
 }
@@ -517,17 +499,17 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    pub fn blake2b_init_param(
+        S: *mut blake2b_state,
+        P: *const blake2b_param,
+    ) -> ::std::os::raw::c_int;
+}
+extern "C" {
     pub fn blake2b_init_key_with_param(
         S: *mut blake2b_state,
         P: *const blake2b_param,
         key: *const ::std::os::raw::c_void,
         keylen: usize,
-    ) -> ::std::os::raw::c_int;
-}
-extern "C" {
-    pub fn blake2b_init_param(
-        S: *mut blake2b_state,
-        P: *const blake2b_param,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -542,5 +524,25 @@ extern "C" {
         S: *mut blake2b_state,
         out: *mut ::std::os::raw::c_void,
         outlen: usize,
+    ) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    pub fn blake2b(
+        out: *mut ::std::os::raw::c_void,
+        outlen: usize,
+        in_: *const ::std::os::raw::c_void,
+        inlen: usize,
+        key: *const ::std::os::raw::c_void,
+        keylen: usize,
+    ) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    pub fn blake2(
+        out: *mut ::std::os::raw::c_void,
+        outlen: usize,
+        in_: *const ::std::os::raw::c_void,
+        inlen: usize,
+        key: *const ::std::os::raw::c_void,
+        keylen: usize,
     ) -> ::std::os::raw::c_int;
 }
