@@ -36,6 +36,15 @@
 #define HAVE_XOP
 #endif
 
+/* MSVC handling, inspired from https://stackoverflow.com/a/18570487 */
+#if (defined(_M_AMD64) || defined(_M_X64))
+/* 64-bit x86 code has at least SSE2 */
+#define HAVE_SSE2
+#endif
+
+#if _M_IX86_FP == 2
+#define HAVE_SSE2
+#endif
 
 #ifdef HAVE_AVX2
 #ifndef HAVE_AVX

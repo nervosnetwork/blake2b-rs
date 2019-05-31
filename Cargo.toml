@@ -1,6 +1,6 @@
 [package]
 name = "blake2b-rs"
-version = "0.1.0"
+version = "0.1.2"
 authors = ["zhangsoledad <787953403@qq.com>"]
 edition = "2018"
 build = "build.rs"
@@ -9,6 +9,11 @@ description = "Rust bindings for the official Blake2b C implementation"
 categories = ["cryptography"]
 keywords = ["hash", "blake2", "crypto"]
 autotests = true
+exclude = [
+    "fixtures/*",
+    "benches/*",
+    "fuzz/*"
+]
 
 [build-dependencies]
 cc = "1.0"
@@ -20,7 +25,6 @@ serde = "1.0"
 serde_derive = "1.0"
 criterion = "0.2"
 blake2-rfc = "0.2.18"
-
 
 [[bench]]
 name = "blake2b"
