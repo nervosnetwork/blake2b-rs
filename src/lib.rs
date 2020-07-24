@@ -1,3 +1,5 @@
+#![no_std]
+
 #[allow(
     non_camel_case_types,
     non_snake_case,
@@ -18,5 +20,8 @@ mod blake2b;
     dead_code
 )]
 mod binding_layout_tests;
+
+#[cfg(test)]
+extern crate std;
 
 pub use crate::blake2b::{blake2b, Blake2b, Blake2bBuilder};
