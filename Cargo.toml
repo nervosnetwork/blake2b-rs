@@ -1,6 +1,6 @@
 [package]
 name = "blake2b-rs"
-version = "0.1.5"
+version = "0.2.0"
 authors = ["zhangsoledad <787953403@qq.com>"]
 edition = "2018"
 build = "build.rs"
