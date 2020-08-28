@@ -3,14 +3,15 @@ use crate::binding::{
     blake2b_constant_BLAKE2B_PERSONALBYTES, blake2b_constant_BLAKE2B_SALTBYTES, blake2b_final,
     blake2b_init_key_with_param, blake2b_init_param, blake2b_param, blake2b_state, blake2b_update,
 };
-use std::ffi::c_void;
+use core::ffi::c_void;
+use core::mem::MaybeUninit;
 
 pub struct Blake2b {
-    pub(crate) state: blake2b_state,
+    pub(crate) state: MaybeUninit<blake2b_state>,
 }
 
 pub struct Blake2bBuilder {
-    pub(crate) state: blake2b_state,
+    pub(crate) state: MaybeUninit<blake2b_state>,
     pub(crate) param: blake2b_param,
     pub(crate) key_len: usize,
     pub(crate) key: [u8; blake2b_constant_BLAKE2B_KEYBYTES as usize],
@@ -33,7 +34,8 @@ impl Blake2bBuilder {
             salt: [0u8; blake2b_constant_BLAKE2B_SALTBYTES as usize],
             personal: [0u8; blake2b_constant_BLAKE2B_PERSONALBYTES as usize],
         };
-        let state = unsafe { ::std::mem::uninitialized() }; // initialize when build called
+
+        let state = MaybeUninit::<blake2b_state>::uninit();
         let key_len = 0;
         let key = [0u8; blake2b_constant_BLAKE2B_KEYBYTES as usize];
 
@@ -50,7 +52,7 @@ impl Blake2bBuilder {
         assert!(len <= blake2b_constant_BLAKE2B_SALTBYTES as usize);
 
         unsafe {
-            ::std::ptr::copy_nonoverlapping(salt.as_ptr(), self.param.salt.as_mut_ptr(), len);
+            ::core::ptr::copy_nonoverlapping(salt.as_ptr(), self.param.salt.as_mut_ptr(), len);
         }
         self
     }
@@ -60,7 +62,7 @@ impl Blake2bBuilder {
         assert!(len <= blake2b_constant_BLAKE2B_PERSONALBYTES as usize);
 
         unsafe {
-            ::std::ptr::copy_nonoverlapping(
+            ::core::ptr::copy_nonoverlapping(
                 personal.as_ptr(),
                 self.param.personal.as_mut_ptr(),
                 len,
@@ -76,7 +78,7 @@ impl Blake2bBuilder {
         self.key_len = key_len;
 
         unsafe {
-            ::std::ptr::copy_nonoverlapping(key.as_ptr(), self.key.as_mut_ptr(), key_len);
+            ::core::ptr::copy_nonoverlapping(key.as_ptr(), self.key.as_mut_ptr(), key_len);
         }
         self
     }
@@ -90,15 +92,12 @@ impl Blake2bBuilder {
         } = self;
         if self.key_len == 0 {
             unsafe {
-                blake2b_init_param(
-                    &mut state as *mut blake2b_state,
-                    &param as *const blake2b_param,
-                );
+                blake2b_init_param(state.as_mut_ptr(), &param as *const blake2b_param);
             }
         } else {
             unsafe {
                 blake2b_init_key_with_param(
-                    &mut state as *mut blake2b_state,
+                    state.as_mut_ptr(),
                     &param as *const blake2b_param,
                     key.as_ptr() as *const c_void,
                     key_len,
@@ -113,7 +112,7 @@ impl Blake2b {
     pub fn update(&mut self, data: &[u8]) {
         unsafe {
             blake2b_update(
-                &mut self.state as *mut blake2b_state,
+                self.state.as_mut_ptr(),
                 data.as_ptr() as *const c_void,
                 data.len(),
             );
@@ -123,7 +122,7 @@ impl Blake2b {
     pub fn finalize(mut self, dst: &mut [u8]) {
         unsafe {
             blake2b_final(
-                &mut self.state as *mut blake2b_state,
+                self.state.as_mut_ptr(),
                 dst.as_mut_ptr() as *mut c_void,
                 dst.len(),
             );
@@ -145,6 +144,9 @@ mod tests {
     use std::fs::File;
     use std::io::BufReader;
     use std::path::Path;
+    use std::string::String;
+    use std::vec;
+    use std::vec::Vec;
 
     #[derive(Deserialize, Debug)]
     struct TestItem {

@@ -1,6 +1,6 @@
 [package]
 name = "blake2b-rs"
-version = "0.1.5"
+version = "0.2.0"
 authors = ["zhangsoledad <787953403@qq.com>"]
 edition = "2018"
 build = "build.rs"
@@ -9,11 +9,14 @@ description = "Rust bindings for the official Blake2b C implementation"
 categories = ["cryptography"]
 keywords = ["hash", "blake2", "crypto"]
 autotests = true
+homepage = "https://github.com/nervosnetwork/blake2b-rs/"
 exclude = [
     "fixtures/*",
-    "benches/*",
     "fuzz/*"
 ]
+
+[dependencies]
+cty = "0.2.1"
 
 [build-dependencies]
 cc = "1.0"

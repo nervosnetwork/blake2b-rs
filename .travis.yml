@@ -14,9 +14,9 @@ env:
 
 matrix:
   include:
-    - rust: 1.33.0
+    - rust: 1.36.0
       os: osx
-    - rust: 1.33.0
+    - rust: 1.36.0
       os: linux
 
 
