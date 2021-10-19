@@ -1,5 +1,4 @@
-[![Build Status](https://travis-ci.com/nervosnetwork/blake2b-rs.svg)](https://travis-ci.com/nervosnetwork/blake2b-rs)
-[![WIN Build Status](https://ci.appveyor.com/api/projects/status/github/nervosnetwork/blake2b-rs?svg=true)](https://ci.appveyor.com/project/zhangsoledad/blake2b-rs-px3o3)
+[![Build Status](https://github.com/nervosnetwork/blake2b-rs/actions/workflows/ci.yml/badge.svg?branch=develop)](https://github.com/nervosnetwork/blake2b-rs/actions/workflows/ci.yml?branch=develop)
 [![Crate](https://img.shields.io/crates/v/blake2b-rs.svg)](https://crates.io/crates/blake2b-rs)
 [![License]](#license)
 
