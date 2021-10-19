@@ -22,11 +22,11 @@ cty = "0.2.1"
 cc = "1.0"
 
 [dev-dependencies]
-faster-hex = "0.3.0"
+faster-hex = "0.6.1"
 serde_json = "1.0"
 serde = "1.0"
 serde_derive = "1.0"
-criterion = "0.2"
+criterion = "0.3"
 blake2-rfc = "0.2.18"
 
 [[bench]]
