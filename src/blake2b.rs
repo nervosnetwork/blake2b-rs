@@ -175,7 +175,7 @@ mod tests {
                 .build();
             blake2b.update(&unhex(test.input.as_bytes()));
             blake2b.finalize(&mut hash);
-            assert_eq!(hex_string(&hash).unwrap(), test.out);
+            assert_eq!(hex_string(&hash), test.out);
         }
     }
 
