@@ -10,15 +10,31 @@ pub struct Blake2b {
     pub(crate) state: MaybeUninit<blake2b_state>,
 }
 
+impl Blake2b {
+    pub fn uninit() -> Self {
+        Blake2b {
+            state: MaybeUninit::<blake2b_state>::uninit(),
+        }
+    }
+}
+
 pub struct Blake2bBuilder {
-    pub(crate) state: MaybeUninit<blake2b_state>,
     pub(crate) param: blake2b_param,
     pub(crate) key_len: usize,
     pub(crate) key: [u8; blake2b_constant_BLAKE2B_KEYBYTES as usize],
 }
 
 impl Blake2bBuilder {
-    pub fn new(out_len: usize) -> Self {
+    /// In reality, most projects only use one or two blake2b hashers,
+    /// which means there is not need to rebuild Blake2bBuilder again
+    /// and again. This const function allows one to create a Rust
+    /// constant builder, and use it across the project. Right now we
+    /// only provide new_with_personal variant, since this is widely
+    /// used in Nervos CKB.
+    pub const fn new_with_personal(
+        out_len: usize,
+        personal: [u8; blake2b_constant_BLAKE2B_PERSONALBYTES as usize],
+    ) -> Self {
         assert!(out_len >= 1 && out_len <= blake2b_constant_BLAKE2B_OUTBYTES as usize);
         let param = blake2b_param {
             digest_length: out_len as u8,
@@ -32,19 +48,24 @@ impl Blake2bBuilder {
             inner_length: 0,
             reserved: [0u8; 14usize],
             salt: [0u8; blake2b_constant_BLAKE2B_SALTBYTES as usize],
-            personal: [0u8; blake2b_constant_BLAKE2B_PERSONALBYTES as usize],
+            personal,
         };
 
-        let state = MaybeUninit::<blake2b_state>::uninit();
         let key_len = 0;
         let key = [0u8; blake2b_constant_BLAKE2B_KEYBYTES as usize];
 
         Blake2bBuilder {
             param,
-            state,
             key_len,
             key,
         }
+    }
+
+    pub fn new(out_len: usize) -> Self {
+        Self::new_with_personal(
+            out_len,
+            [0u8; blake2b_constant_BLAKE2B_PERSONALBYTES as usize],
+        )
     }
 
     pub fn salt(mut self, salt: &[u8]) -> Blake2bBuilder {
@@ -84,27 +105,31 @@ impl Blake2bBuilder {
     }
 
     pub fn build(self) -> Blake2b {
-        let Blake2bBuilder {
-            mut state,
-            param,
-            key,
-            key_len,
-        } = self;
+        let mut blake2b = Blake2b::uninit();
+        self.build_from_ref(&mut blake2b);
+        blake2b
+    }
+
+    /// Combined with new_with_personal, this can use the same builder
+    /// to efficiently generate multiple different hashers.
+    pub fn build_from_ref(&self, blake2b: &mut Blake2b) {
         if self.key_len == 0 {
             unsafe {
-                blake2b_init_param(state.as_mut_ptr(), &param as *const blake2b_param);
+                blake2b_init_param(
+                    blake2b.state.as_mut_ptr(),
+                    &self.param as *const blake2b_param,
+                );
             }
         } else {
             unsafe {
                 blake2b_init_key_with_param(
-                    state.as_mut_ptr(),
-                    &param as *const blake2b_param,
-                    key.as_ptr() as *const c_void,
-                    key_len,
+                    blake2b.state.as_mut_ptr(),
+                    &self.param as *const blake2b_param,
+                    self.key.as_ptr() as *const c_void,
+                    self.key_len,
                 );
             }
         }
-        Blake2b { state }
     }
 }
 
@@ -120,6 +145,13 @@ impl Blake2b {
     }
 
     pub fn finalize(mut self, dst: &mut [u8]) {
+        self.finalize_from_ref(dst);
+    }
+
+    /// This is the same as finalize, but allows one to call the function
+    /// via a mutable reference, which can result in better performance
+    /// if one can manually control the times this function is invoked.
+    pub fn finalize_from_ref(&mut self, dst: &mut [u8]) {
         unsafe {
             blake2b_final(
                 self.state.as_mut_ptr(),
