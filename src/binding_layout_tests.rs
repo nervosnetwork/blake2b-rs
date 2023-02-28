@@ -199,7 +199,9 @@ fn bindgen_test_layout_blake2b_param__() {
         )
     );
     assert_eq!(
-        unsafe { &(*(::core::ptr::null::<blake2b_param__>())).leaf_length as *const _ as usize },
+        unsafe {
+            core::ptr::addr_of!((*(::core::ptr::null::<blake2b_param__>())).leaf_length) as usize
+        },
         4usize,
         concat!(
             "Offset of field: ",
@@ -209,7 +211,9 @@ fn bindgen_test_layout_blake2b_param__() {
         )
     );
     assert_eq!(
-        unsafe { &(*(::core::ptr::null::<blake2b_param__>())).node_offset as *const _ as usize },
+        unsafe {
+            core::ptr::addr_of!((*(::core::ptr::null::<blake2b_param__>())).node_offset) as usize
+        },
         8usize,
         concat!(
             "Offset of field: ",
@@ -219,7 +223,9 @@ fn bindgen_test_layout_blake2b_param__() {
         )
     );
     assert_eq!(
-        unsafe { &(*(::core::ptr::null::<blake2b_param__>())).xof_length as *const _ as usize },
+        unsafe {
+            core::ptr::addr_of!((*(::core::ptr::null::<blake2b_param__>())).xof_length) as usize
+        },
         12usize,
         concat!(
             "Offset of field: ",
