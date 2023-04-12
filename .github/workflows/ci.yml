@@ -57,14 +57,18 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        build: [Linux, macOS, windows-2016, windows-2019]
+        build: [ubuntu-latest, ubuntu-20.04, macos-latest, macos-11, windows-latest, windows-2019]
         include:
-          - build: Linux
+          - build: ubuntu-latest
             os: ubuntu-latest
-          - build: macOS
+          - build: ubuntu-20.04
+            os: ubuntu-20.04
+          - build: macos-latest
             os: macos-latest
-          - build: windows-2016
-            os: windows-2016
+          - build: macos-11
+            os: macos-11
+          - build: windows-latest
+            os: windows-latest
           - build: windows-2019
             os: windows-2019
     steps:

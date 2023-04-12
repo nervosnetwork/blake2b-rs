@@ -1,6 +1,6 @@
 [package]
 name = "blake2b-rs"
-version = "0.2.0"
+version = "0.3.0"
 authors = ["zhangsoledad <787953403@qq.com>"]
 edition = "2018"
 build = "build.rs"
@@ -16,10 +16,11 @@ exclude = [
 ]
 
 [dependencies]
-cty = "0.2.1"
+cty = "0.2.2"
 
 [build-dependencies]
-cc = "1.0"
+cc = { version = "1.0", features = ["parallel"] }
+bindgen = "0.64.0"
 
 [dev-dependencies]
 faster-hex = "0.6.1"
