@@ -38,19 +38,19 @@ jobs:
           profile: minimal
           override: true
       - name: Run clippy
-        uses: actions-rs/clippy-check@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          args: --all -- -D warnings
+        run: cargo clippy --all -- -D warnings
 
   audit:
     name: Security audit
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions-rs/audit-check@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Install cargo-binstall
+        uses: cargo-bins/cargo-binstall@v1.13.0
+      - name: Install cargo-audit
+        run: cargo binstall -y cargo-audit
+      - name: Run Audit
+        run: cargo audit
 
   test:
     name: ${{ matrix.build }}
