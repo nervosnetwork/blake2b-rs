@@ -18,6 +18,18 @@ fn main() {
         cc::Build::new()
             .file("BLAKE2/sse/blake2b.c")
             .compile("libblake2b.a");
+    } else if features.contains("neon") {
+        let bindings = bindings_builder
+            .header("BLAKE2/neon/blake2.h")
+            .generate()
+            .expect("unable to generate bindings");
+        bindings
+            .write_to_file(out_path.join("bindings.rs"))
+            .expect("unable to write bindings");
+
+        cc::Build::new()
+            .file("BLAKE2/neon/blake2b.c")
+            .compile("libblake2b.a");
     } else {
         let bindings = bindings_builder
             .header("BLAKE2/ref/blake2.h")
